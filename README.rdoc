@@ -9,4 +9,6 @@ Rails plugin containing OpenId authentication support.
   rake gems:install
   rake db:migrate
 
+You need to have map.root set in your routes.rb file.
+
 Copyright (c) 2010 Octo Technology, released under the MIT license
