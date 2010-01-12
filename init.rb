@@ -5,3 +5,8 @@ ActionController::Base.send :include, OctoAuth
 config.gem 'ruby-openid', :lib => false
 config.gem 'authlogic'
 config.gem 'authlogic-oid', :lib => 'authlogic_openid'
+config.gem 'haml'
+
+config.after_initialize do
+  Haml.init_rails(binding) if defined?(Haml)
+end
