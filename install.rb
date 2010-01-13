@@ -1,8 +1,8 @@
 require 'fileutils'
-current_path = File.join(File.dirname(__FILE__)
+current_path = File.dirname(__FILE__)
 
-migrations = Dir.glob(current_path, 'migrations', '*.rb'))
-images = Dir.glob(current_path, 'public', 'images', '*')
+migrations = Dir.glob(File.join(current_path, 'migrations', '*.rb'))
+images = Dir.glob(File.join(current_path, 'public', 'images', '*'))
 migrate_folder = File.join(RAILS_ROOT, 'db', 'migrate')
 images_folder = File.join(RAILS_ROOT, 'public', 'images', 'octo-rails')
 
