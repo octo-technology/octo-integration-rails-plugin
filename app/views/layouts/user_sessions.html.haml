@@ -1,0 +1,10 @@
+!!! 5
+%html{ :lang => "en" }
+  %head
+    %meta{ :content => "text/html; charset=utf-8", "http-equiv" => "Content-Type" }
+    %title Sign in
+    = stylesheet_link_tag "octo-rails_user_sessions"
+    = javascript_include_tag :all, :cache => true
+  %body
+    .form_area
+      = yield
