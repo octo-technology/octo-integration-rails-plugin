@@ -1,15 +1,16 @@
 require 'fileutils'
+
+def sync_asset plugin_files, app_folder
+  FileUtils.mkdir app_folder, :verbose => true unless File.exists? app_folder
+  FileUtils.cp plugin_files, File.join(app_folder, ''), :verbose => true
+end
+
 current_path = File.dirname(__FILE__)
 
-migrations = Dir.glob(File.join(current_path, 'migrations', '*.rb'))
-migrate_folder = File.join(RAILS_ROOT, 'db', 'migrate')
-FileUtils.mkdir migrate_folder, :verbose => true unless File.exists? migrate_folder
-FileUtils.cp migrations, File.join(migrate_folder, ''), :verbose => true
+sync_asset Dir.glob(File.join(current_path, 'migrations', '*.rb')), File.join(RAILS_ROOT, 'db', 'migrate')
+sync_asset Dir.glob(File.join(current_path, 'public', 'images', 'octo-rails', '*')), File.join(RAILS_ROOT, 'public', 'images', 'octo-rails')
+sync_asset Dir.glob(File.join(current_path, 'public', 'sass_stylesheets', '*')), File.join(RAILS_ROOT, 'public', 'sass')
 
-images = Dir.glob(File.join(current_path, 'public', 'images', 'octo-rails', '*'))
-images_folder = File.join(RAILS_ROOT, 'public', 'images', 'octo-rails')
-FileUtils.mkdir images_folder, :verbose => true unless File.exists? images_folder
-FileUtils.cp images, File.join(images_folder, ''), :verbose => true
 
 infos = <<EOF
 
