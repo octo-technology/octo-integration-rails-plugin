@@ -9,7 +9,7 @@ current_path = File.dirname(__FILE__)
 
 sync_asset Dir.glob(File.join(current_path, 'migrations', '*.rb')), File.join(RAILS_ROOT, 'db', 'migrate')
 sync_asset Dir.glob(File.join(current_path, 'public', 'images', 'octo-rails', '*')), File.join(RAILS_ROOT, 'public', 'images', 'octo-rails')
-sync_asset Dir.glob(File.join(current_path, 'public', 'sass_stylesheets', '*')), File.join(RAILS_ROOT, 'public', 'sass')
+sync_asset Dir.glob(File.join(current_path, 'public', 'sass_stylesheets', '*')), File.join(RAILS_ROOT, 'public', 'stylesheets', 'sass')
 
 
 infos = <<EOF
