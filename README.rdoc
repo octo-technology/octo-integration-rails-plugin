@@ -4,8 +4,11 @@ Rails plugin containing OpenId authentication support.
 
 == Installation
 
-  script/plugin install git://github.com/rails/open_id_authentication.git
+  ./script/plugin install git://github.com/rails/open_id_authentication.git
+  sudo gem install rack-openid
+  sudo gem install ruby-openid
   ./script/plugin install git://github.com/octo-technology/octo-rails.git
+
   rake gems:install
   rake db:migrate
 
