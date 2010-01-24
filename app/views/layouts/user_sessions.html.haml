@@ -6,5 +6,7 @@
     = stylesheet_link_tag "octo-rails_user_sessions"
     = javascript_include_tag :all, :cache => true
   %body
-    .form_area
-      = yield
+    .octo-rails
+      %h1= application_name
+      .form_area
+        = yield
