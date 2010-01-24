@@ -14,4 +14,27 @@ Rails plugin containing OpenId authentication support.
 
 You need to have map.root set in your routes.rb file.
 
+== Restricted actions in your app
+
+for each controller (or only ApplicationController if you want the entire app to be restricted)
+
+  before_filter :require_user
+
+  if you need only some actions to be restricted, you can add the :only and :except options.
+  
+  before_filter :require_user, :except => [:show, :index]
+
+== Config vars
+  Because the production environment is suited for Heroku, configuration values are config vars (http://docs.heroku.com/config-vars)
+  Available config options are :
+  OCTO_OPEN_ID=true to restrict access to OCTO Open Id server only (for internal app use).
+  APPLICATION_NAME="my cool app" to be displayed on the login page
+  
+  in dev mode, just do like this
+  OCTO_OPEN_ID=true ./script/server
+  
+
+in dev mode, launch 
+
+
 Copyright (c) 2010 Octo Technology, released under the MIT license
