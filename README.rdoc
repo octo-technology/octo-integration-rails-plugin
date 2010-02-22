@@ -1,40 +1,32 @@
 = octo-rails
 
-Rails plugin containing OpenId authentication support.
+Rails plugin containing simple OpenId authentication middleware support.
+
+== Usage
+
+add before_filter :authenticate to enable openid middleware (in ApplicationController usually)
+add skip_before_filter :authenticate, :only => [:index], :except => [:edit] in any controller to prevent openid authentication
+
+you need to have a User model with the at least following field :
+
+create_table "users", :force => true do |t|
+  t.string "openid"
+  t.string "email"
+  t.string "nickname"
+  t.string "rss_key"
+end
+
+once authentication if succesful, a user is automatically created on first connection and redirected to the following url
+:controller => :users, :action => :first_connection
+
+the method current_user is available in controllers and views and rely on the presence of a User model
 
 == Installation
 
-  ./script/plugin install git://github.com/rails/open_id_authentication.git
-  sudo gem install rack-openid
-  sudo gem install ruby-openid
   ./script/plugin install git://github.com/octo-technology/octo-rails.git
-
   rake gems:install
   rake db:migrate
 
 You need to have map.root set in your routes.rb file.
-
-== Restricted actions in your app
-
-for each controller (or only ApplicationController if you want the entire app to be restricted)
-
-  before_filter :require_user
-
-  if you need only some actions to be restricted, you can add the :only and :except options.
-  
-  before_filter :require_user, :except => [:show, :index]
-
-== Config vars
-  Because the production environment is suited for Heroku, configuration values are config vars (http://docs.heroku.com/config-vars)
-  Available config options are :
-  OCTO_OPEN_ID=true to restrict access to OCTO Open Id server only (for internal app use).
-  APPLICATION_NAME="my cool app" to be displayed on the login page
-  
-  in dev mode, just do like this
-  OCTO_OPEN_ID=true ./script/server
-  
-
-in dev mode, launch 
-
 
 Copyright (c) 2010 Octo Technology, released under the MIT license

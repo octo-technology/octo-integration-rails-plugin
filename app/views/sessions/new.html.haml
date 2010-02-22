@@ -1,0 +1,33 @@
+!!! 5
+%html{ :lang => "en" }
+  %head
+    %meta{ :content => "text/html; charset=utf-8", "http-equiv" => "Content-Type" }
+    = stylesheet_link_tag "octo_rails"
+    %title Sign in
+  %body
+    .octo-rails
+      %h1 Sharp Window
+      .form_area
+        .inner
+          - form_tag '/', :method => :get do
+            - unless flash[:error].nil?
+              .errors
+                = flash[:error]
+            = label_tag :openid_identifier, image_tag("openid-logo.png")
+            %br
+            - if ENV['OCTO_OPEN_ID']
+              %table
+                %tr
+                  %td{:valign => 'bottom'}
+                    %span.default_openid_url
+                      https://openid.octo.com/users/
+                  %td{:valign => 'bottom'}
+                    %pan.trigram votre trigramme
+                    %br
+                    = text_field_tag :openid_identifier, nil, :maxlength => 3, :style => "width:50px"
+            - else
+              = text_field_tag :openid_identifier
+            %br
+            = submit_tag 'Sign in'
+        :javascript
+          document.getElementById('openid_identifier').focus()
