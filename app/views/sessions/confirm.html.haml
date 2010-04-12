@@ -1,7 +1,7 @@
 %h1 Welcome there !
 %h2= "This is an OpenID we haven't seen on #{ENV['APP_NAME']} before:"
 
-- semantic_form_for @user, :url => "/sessions/confirm" do |f|
+- form_for @user, :url => "/sessions/confirm", :builder => Formtastic::SemanticFormBuilder do |f|
   %pre= @user.openid
   %p
     = "Please confirm and complete this simple form to start playing with #{ENV['APP_NAME']}."
