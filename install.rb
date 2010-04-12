@@ -9,3 +9,16 @@ sync_asset Dir.glob(File.join(current_path, 'db', 'migrations', '*.rb')), File.j
 sync_asset Dir.glob(File.join(current_path, 'initializers', '*.rb')), File.join(RAILS_ROOT, 'config', 'initializers')
 sync_asset Dir.glob(File.join(current_path, 'public', 'images', '*')), File.join(RAILS_ROOT, 'public', 'images', 'openid')
 sync_asset Dir.glob(File.join(current_path, 'public', 'sass', '*')), File.join(RAILS_ROOT, 'public', 'stylesheets', 'sass')
+
+puts "Okay for copying resources ...\n\n\n\n"
+
+begin
+  User
+rescue NameError
+  puts "Could not find User model, run this to set it up"
+  puts "./script/generate scaffold user nickname:string openid:string email:string"
+  puts "\n"
+  puts "then run your migrations"
+  puts "rake db:migrate"
+  puts "\n"
+end

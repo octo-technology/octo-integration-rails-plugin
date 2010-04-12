@@ -1,4 +1,3 @@
-# Octo
 module OctoRails
   
   def self.included base
@@ -6,25 +5,34 @@ module OctoRails
   end
   
   def authenticate opts={}
-    return true if session[:user]
-    if resp = request.env["rack.openid.response"]
-      if resp.status == :success
-        set_current_user resp
-        redirect_after_auth
-      else
-        flash[:error] = "OpenID result: #{resp.status}"
-        render "/sessions/new" unless session[:user]
-      end
+    return true if logged_in?
+    if request.env.has_key?("rack.openid.response")
+      authenticate_from_openid_provider_response
     else
-      unless params[:openid_identifier].blank?
-        params[:openid_identifier] = "https://openid.octo.com/users/" + params[:openid_identifier] if ENV['OCTO_OPEN_ID']
-        response.headers['WWW-Authenticate'] = Rack::OpenID.build_header(:identifier => params["openid_identifier"], :required => ['email', "http://axschema.org/contact/email"])
-        render :text => 'got openid?', :status => 401
-      else
-        session[:after_login_url] = request.env['REQUEST_URI']
-        unless session[:user]
-          render "/sessions/new"
-        end
+      redirect_access_denied
+    end
+  end
+  
+  def authenticate_from_openid_provider_response
+    response = request.env["rack.openid.response"]
+    if response.status == :success
+      set_current_user_from_response response
+      redirect_after_auth
+    else
+      flash[:error] = "OpenID result: #{response.status}"
+      render "/sessions/new" unless session[:user]
+    end
+  end
+  
+  def redirect_access_denied
+    unless params[:openid_identifier].blank?
+      params[:openid_identifier] = "https://openid.octo.com/users/" + params[:openid_identifier] if ENV['OCTO_OPEN_ID']
+      response.headers['WWW-Authenticate'] = Rack::OpenID.build_header(:identifier => params["openid_identifier"], :required => ['email', "http://axschema.org/contact/email"])
+      render :text => 'got openid?', :status => 401
+    else
+      session[:after_login_url] = request.env['REQUEST_URI']
+      unless session[:user]
+        render "/sessions/new"
       end
     end
   end
@@ -34,33 +42,42 @@ module OctoRails
       redirect_to session[:after_login_url]
       session[:after_login_url] = nil
     else
-      redirect_to projects_url
+      redirect_to root_path
     end
   end
   
-  def set_current_user resp
+  def set_current_user_from_response resp
     email = resp.get_signed "http://openid.net/srv/ax/1.0", "value.ext0"
-    begin
-      user = User.find_by_openid!(resp.display_identifier)
-      user.update_attribute :email, email if user.email.blank? && email
-    rescue ActiveRecord::RecordNotFound
-      user = User.create :openid => resp.display_identifier, :email => email
-      session[:first_connection] = true
+    @user = User.find_by_openid(resp.display_identifier)
+    if @user
+      # @user.update_attribute :email, email if @user.email.blank? && email
+      set_current_user @user.id
+    else
+      session[:signup] = {:openid => resp.display_identifier, :email => email}
     end
-    session[:user] = user.id
+  end
+  
+  def set_current_user user_id
+    session[:user] = user_id
   end
   
   protected
   def redirect_after_auth
-    if session.has_key? :first_connection
-      redirect_to :controller => :users, :action => :first_connection
+    unless logged_in?
+      redirect_to :controller => :sessions, :action => :confirm
       return
     end
     redirect_after_login_url
   end
   
   def current_user
-    @current_user ||= User.find session[:user]
+    if session.has_key? :user
+      @current_user ||= User.find_by_id session[:user]
+    end
+  end
+  
+  def logged_in?
+    current_user
   end
 
 end
