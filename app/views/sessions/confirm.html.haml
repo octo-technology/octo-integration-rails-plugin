@@ -11,7 +11,6 @@
     = f.input :openid, :as => :hidden
     = f.input :email, :label => 'Email', :hint => "Just for the record"
     = f.input :nickname, :label => 'Nickname', :required => false, :hint => "It will not be unique"
-    = f.input :eula, :as => :boolean, :label => "I understand this service is in beta and it could be stopped anytime"
   - f.buttons do
     = f.commit_button :label => "Confirm my account"
     %li
