@@ -1,10 +1,9 @@
 config.gem 'haml'
 config.gem 'ruby-openid', :lib => false
 config.gem 'rack-openid', :lib => 'rack/openid'
-require 'openid'
-require 'openid_ar_store'
+config.gem 'formtastic'
 
-require File.join(File.dirname(__FILE__), 'lib', 'openid_patch')
+require 'openid_ar_store'
 
 ActionController::Base.send :include, OctoRails
 

@@ -1,25 +1,22 @@
 = octo-rails
 
-Rails plugin containing simple OpenId authentication middleware support.
+Rails plugin containing simple and convivial OpenId authentication middleware support.
 
 == Usage
 
-add before_filter :authenticate to enable openid middleware (in ApplicationController usually)
-add skip_before_filter :authenticate, :only => [:index], :except => [:edit] in any controller to prevent openid authentication
+To add authentication filter
+  before_filter :authenticate
 
-you need to have a User model with the at least following field :
+To avoid authentication filter
+  skip_before_filter :authenticate, :only => [:edit, :destroy], :except => [:index, :show]
 
-create_table "users", :force => true do |t|
-  t.string "openid"
-  t.string "email"
-  t.string "nickname"
-  t.string "rss_key"
-end
+methods available :
+ - current_user
+ - logged_in?
 
-once authentication if succesful, a user is automatically created on first connection and redirected to the following url
-:controller => :users, :action => :first_connection
-
-the method current_user is available in controllers and views and rely on the presence of a User model
+routes available
+  - login_path
+  - logout_path
 
 == Installation
 
@@ -27,6 +24,20 @@ the method current_user is available in controllers and views and rely on the pr
   rake gems:install
   rake db:migrate
 
-You need to have map.root set in your routes.rb file.
+You need to have root set in your routes for a successful signin/regestering workflow.
+You also need a User model with the at least following fields :
+
+create_table "users" do |t|
+  t.string "openid", "email", "nickname"
+end
+
+ENV['APP_NAME'] is used to display your application name
+
+== OCTO Features
+
+ENV['OCTO_ONLY'] is used to force openid.octo.com as the only authorized openid provider (for internal websites)
+
+
+
 
 Copyright (c) 2010 Octo Technology, released under the MIT license

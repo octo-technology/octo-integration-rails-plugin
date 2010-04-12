@@ -2,13 +2,14 @@ body
   :background-color #DDDDDD
   :font-family Helvetica
   :margin 200px auto 0px
-  :width 500px
+  :width 760px
   h1
     :text-align center
     :font-family Georgia
     :color #444
   .form_area
     .errors, .notice
+      :line-height 1.4em
       :background-color darkRed
       :padding 4px
       :text-align center
@@ -18,11 +19,17 @@ body
       :-moz-border-radius 4px
       :-webkit-border-radius 4px
     .notice
-      :background-color lightBlue
+      :background-color #94b1c5
     :color #333333
     :background-color white
+    h3
+      :text-align center
+      :line-height 1.4em
     :border 3px solid #CCC
     :padding 10px
+    :padding-top 0px
+    :width 455px
+    :float left
     input[type=text]
       :width 95%
       :border 1px solid #999999
@@ -64,3 +71,16 @@ body
       :color #999
       :font-size 0.9em
       :font-style italic
+.form_area.why_openid
+  :background-color lightYellow !important
+  :float right
+  :width 240px
+  :line-height 1.5em
+.outdoors
+  :color #555
+  :text-align center
+  :padding 20px
+a
+  :color inherit
+  &:hover
+    :text-decoration none

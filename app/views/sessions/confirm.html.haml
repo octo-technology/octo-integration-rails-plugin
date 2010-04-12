@@ -1,0 +1,19 @@
+%h1 Welcome there !
+%h2= "This is an OpenID we haven't seen on #{ENV['APP_NAME']} before:"
+
+- semantic_form_for @user, :url => "/sessions/confirm" do |f|
+  %pre= @user.openid
+  %p
+    = "Please confirm and complete this simple form to start playing with #{ENV['APP_NAME']}."
+  %br
+  = f.error_messages
+  - f.inputs do
+    = f.input :openid, :as => :hidden
+    = f.input :email, :label => 'Email', :hint => "Just for the record"
+    = f.input :nickname, :label => 'Nickname', :required => false, :hint => "It will not be unique"
+    = f.input :eula, :as => :boolean, :label => "I understand this service is in beta and it could be stopped anytime"
+  - f.buttons do
+    = f.commit_button :label => "Confirm my account"
+    %li
+      or
+      = link_to "Cancel", "/sessions/new"

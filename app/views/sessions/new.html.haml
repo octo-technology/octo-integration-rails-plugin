@@ -2,32 +2,41 @@
 %html{ :lang => "en" }
   %head
     %meta{ :content => "text/html; charset=utf-8", "http-equiv" => "Content-Type" }
-    = stylesheet_link_tag "octo_rails"
+    = stylesheet_link_tag "openid", "octo_rails"
+    = javascript_include_tag "jquery.min", "openid-jquery", "signup"
     %title Sign in
   %body
     .octo-rails
-      %h1 Sharp Window
+      %h1= ENV['APP_NAME'] || "ENV['APP_NAME']"
       .form_area
+        %h3 Log in or register with OpenID by clicking on your OpenID account provider
+        - if current_user
+          .notice
+            You're currently a logged in with your OpenID. Logging in again with a
+            %i different
+            OpenID won't log you out.
         .inner
-          - form_tag '/', :method => :get do
+          - form_tag '/', :method => :get, :id => "openid_form" do
             - unless flash[:error].nil?
               .errors
                 = flash[:error]
-            = label_tag :openid_identifier, image_tag("openid-logo.png")
-            %br
-            - if ENV['OCTO_OPEN_ID']
-              %table
-                %tr
-                  %td{:valign => 'bottom'}
-                    %span.default_openid_url
-                      https://openid.octo.com/users/
-                  %td{:valign => 'bottom'}
-                    %pan.trigram votre trigramme
-                    %br
-                    = text_field_tag :openid_identifier, nil, :maxlength => 3, :style => "width:50px"
-            - else
-              = text_field_tag :openid_identifier
-            %br
-            = submit_tag 'Sign in'
-        :javascript
-          document.getElementById('openid_identifier').focus()
+            #openid_btns
+            #openid_input_area
+            %p
+              Or, manually enter your OpenID URL:
+            = text_field_tag :openid_identifier
+            = submit_tag 'Sign in', :id => "submit-button"
+      .form_area.why_openid
+        %h3 Why OpenID?
+        %p
+          It's a single username and password that allows you to log in to any OpenID-enabled site.
+          %br
+          It works on thousands of websites.
+          %br
+          It's an open standard.
+          %br
+          = link_to "Learn more »", "http://openid.net/get-an-openid/what-is-openid/", :target => "_blank"
+      %div{:style=>"clear:both"}
+      %p.outdoors
+        Or, if you don't have an OpenID through any of the above, 
+        = link_to "click here to sign up!", "http://myopenid.com"
