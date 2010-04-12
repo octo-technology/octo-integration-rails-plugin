@@ -7,5 +7,5 @@ current_path = File.dirname(__FILE__)
 
 sync_asset Dir.glob(File.join(current_path, 'db', 'migrations', '*.rb')), File.join(RAILS_ROOT, 'db', 'migrate')
 sync_asset Dir.glob(File.join(current_path, 'initializers', '*.rb')), File.join(RAILS_ROOT, 'config', 'initializers')
-sync_asset Dir.glob(File.join(current_path, 'public', 'images', '*')), File.join(RAILS_ROOT, 'public', 'images')
+sync_asset Dir.glob(File.join(current_path, 'public', 'images', '*')), File.join(RAILS_ROOT, 'public', 'images', 'openid')
 sync_asset Dir.glob(File.join(current_path, 'public', 'sass', '*')), File.join(RAILS_ROOT, 'public', 'stylesheets', 'sass')
