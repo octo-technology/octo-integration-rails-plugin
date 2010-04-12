@@ -22,7 +22,6 @@ class SessionsController < ApplicationController
     else
       @user = User.new session[:signup]
       @user.nickname = @user.email.split("@").first if @user.email.present?
-      @user.eula = true
     end
   end
   
