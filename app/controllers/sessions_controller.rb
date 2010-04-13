@@ -16,10 +16,11 @@ class SessionsController < ApplicationController
       @user = User.new params[:user]
       if @user.save
         set_current_user @user.id
+        session[:signup] = nil
         redirect_to root_path
       end
     else
-      if session.has_key? :signup
+     if session[:signup]
         @user = User.new session[:signup]
         @user.nickname = @user.email.split("@").first if @user.email.present?
       else
