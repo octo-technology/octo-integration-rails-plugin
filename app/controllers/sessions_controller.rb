@@ -1,15 +1,14 @@
 class SessionsController < ApplicationController
   
   skip_filter :authenticate, :only => [:confirm]
-    
-
+  
   def logout
     session.clear
     redirect_to root_url
   end
   
   def new
-    render :layout => false
+    render :layout => "sessions"
   end
   
   def confirm
@@ -20,8 +19,12 @@ class SessionsController < ApplicationController
         redirect_to root_path
       end
     else
-      @user = User.new session[:signup]
-      @user.nickname = @user.email.split("@").first if @user.email.present?
+      if session.has_key? :signup
+        @user = User.new session[:signup]
+        @user.nickname = @user.email.split("@").first if @user.email.present?
+      else
+        render :status => 404, :nothing => true
+      end
     end
   end
   

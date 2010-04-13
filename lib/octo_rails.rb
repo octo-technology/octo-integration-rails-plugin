@@ -20,7 +20,7 @@ module OctoRails
       redirect_after_auth
     else
       flash[:error] = "OpenID result: #{response.status}"
-      render "/sessions/new" unless session[:user]
+      render "/sessions/new", :layout => "sessions" unless session[:user]
     end
   end
   
@@ -32,7 +32,7 @@ module OctoRails
     else
       session[:after_login_url] = request.env['REQUEST_URI']
       unless session[:user]
-        render "/sessions/new"
+        render "/sessions/new", :layout => "sessions"
       end
     end
   end
