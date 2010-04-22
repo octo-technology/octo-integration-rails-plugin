@@ -1,13 +1,23 @@
 module OctoRails
   
   def self.included base
-    base.send :helper_method, :current_user
+    base.send :helper_method, :current_user, :logged_in?
+    base.send :before_filter, :handle_openid
+  end
+
+  def handle_openid opts={}
+    if params[:openid_identifier].present?
+      params[:openid_identifier] = "https://openid.octo.com/users/" + params[:openid_identifier] if ENV['OCTO_OPEN_ID']
+      response.headers['WWW-Authenticate'] = Rack::OpenID.build_header(:identifier => params["openid_identifier"], :required => ['email', "http://axschema.org/contact/email"])
+      render :text => 'got openid?', :status => 401
+    elsif request.env.has_key?("rack.openid.response")
+      authenticate_from_openid_provider_response
+    end
   end
   
   def authenticate opts={}
-    return true if logged_in?
-    if request.env.has_key?("rack.openid.response")
-      authenticate_from_openid_provider_response
+    if logged_in?
+      true 
     else
       redirect_access_denied
     end
@@ -25,15 +35,9 @@ module OctoRails
   end
   
   def redirect_access_denied
-    unless params[:openid_identifier].blank?
-      params[:openid_identifier] = "https://openid.octo.com/users/" + params[:openid_identifier] if ENV['OCTO_OPEN_ID']
-      response.headers['WWW-Authenticate'] = Rack::OpenID.build_header(:identifier => params["openid_identifier"], :required => ['email', "http://axschema.org/contact/email"])
-      render :text => 'got openid?', :status => 401
-    else
-      session[:after_login_url] = request.env['REQUEST_URI']
-      unless session[:user]
-        render "/sessions/new", :layout => "sessions"
-      end
+    session[:after_login_url] = request.env['REQUEST_URI']
+    unless session[:user]
+      render "/sessions/new", :layout => "sessions"
     end
   end
   
@@ -71,13 +75,13 @@ module OctoRails
   end
   
   def current_user
-    if session.has_key? :user
+    if session[:user]
       @current_user ||= User.find_by_id session[:user]
     end
   end
   
   def logged_in?
-    current_user
+    !current_user.nil?
   end
 
 end
